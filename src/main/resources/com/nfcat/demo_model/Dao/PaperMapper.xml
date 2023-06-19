@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nfcat.demo_model.Dao.PaperMapper">
+
+    <update id="countDownload">
+        update thesis set downloadnumb=downloadnumb+1 where id=#{id}
+    </update>
+
+    <resultMap id="asd" type="com.nfcat.demo_model.pojo.Paper">
+        <result column="downloadnumb" property="downloadTime"></result>
+        <result column="Abstract1" property="Abstract"></result>
+        <result column="specialized" property="major"></result>
+        <result column="teacher" property="advisor"></result>
+    </resultMap>
+
+    <select id="rankByDownload" resultMap="asd">
+    select * from thesis order by downloadnumb desc limit #{page},10;
+    </select>
+
+
+    <!--查询总量-->
+    <select id="getCount" resultType="java.lang.Float">
+    select count(*) from thesis p right join userinfo u on p.uid=u.username
+    where u.school= #{school} ;
+    </select>
+    <!--查询所有
+        <select id="papernum" resultMap="schoolPaper" >
+            select count(*) from paper p right join user u on p.uid=u.username
+            where u.school=#{school}  ;
+        <lect>-->
+    <!--优秀数量-->
+    <select id="getYouXiu" resultType="java.lang.Float">
+    select count(*) from thesis p
+    right join userinfo u on p.uid=u.username
+    where u.school=#{school} and p.score>=85;
+    </select>
+    <!--及格数量-->
+    <select id="getJiGe" resultType="java.lang.Float">
+    select count(*) from thesis p
+    right join userinfo u on p.uid=u.username
+    where u.school=#{school} and  p.score > 60 and p.score <![CDATA[< ]]> 85;
+    </select>
+
+
+</mapper>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+  <el-row>
+    <el-button>默认按钮</el-button>
+    <el-button type="primary">主要按钮</el-button>
+    <el-button type="success">成功按钮</el-button>
+    <el-button type="info">信息按钮</el-button>
+    <el-button type="warning">警告按钮</el-button>
+    <el-button type="danger">危险按钮</el-button>
+  </el-row>
+
+  <el-tag>标签一</el-tag>
+  <el-tag type="success">标签二</el-tag>
+  <el-tag type="info">标签三</el-tag>
+  <el-tag type="warning">标签四</el-tag>
+  <el-tag type="danger">标签五</el-tag>
+
+    <input type="button" value="我是按钮" v-on:click="onSubmit()">
+    <input type="text" v-model="username1">
+    {{username1}}
+</div>
+
+
+
+
+<script src="vue.js"></script>
+<script src="lib/index.js"></script>
+<link rel="stylesheet" href="lib/theme-chalk/index.css">
+
+<script>
+</script>
+
+<script>
+  new Vue({
+    el:"#app",
+    data(){
+      return {
+          username1 = ""
+      }
+    },
+    methods:{
+      onSubmit() {
+        console.log('submit!');
+      }
+
+    }
+
+
+  })
+
+
+</script>
+
+</body>
+</html>

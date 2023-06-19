@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta charset="UTF-8">
+    <title>院系论文统计</title>
+  <link rel="shortcut icon" href="https://www.bilibili.com/favicon.ico?v=1"/>
+  <script src="element-ui/axios-0.18.0.js"></script>
+  <script src="element-ui/vue.js"></script>
+  <script src="element-ui/lib/index.js"></script>
+  <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div style="width: 70%;margin: auto">
+  <canvas id="myChart"></canvas>
+</div>
+<div id="main" style="width: 70%;margin: auto">
+
+</div>
+<!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+
+<input type="button" onclick="f()">
+
+<script>
+  const ctx = document.getElementById('myChart');
+  var ch = {
+    type: 'bar',
+    data: {
+      labels: ["文法学院", '理学院', '工程学院', '信息学院'],
+      datasets: [{
+        label: '优秀率',
+        data: [0, 0, 0, 0],
+        borderWidth: 1
+      },{
+        label: '合格率',
+        data: [0, 0, 0, 0],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  }
+
+  var chart = new Chart(ctx, ch);
+
+  //--------------------------------------------------------------------------------------------------------
+  var vue = new Vue({
+    el:'#main',
+    data() {
+      return{
+        hege:{
+          a1:"0",
+          a2:"0",
+          a3:"0",
+          a4:"0",
+          b1:"0",
+          b2:"0",
+          b3:"0",
+          b4:"0",
+        }
+      }
+    },
+    mounted(){
+      var _this = this
+      axios({
+        responseType:'json',
+        method: "get",
+        url: 'http://81.70.89.161:10004/school'
+      }).then(function (resp) {
+        console.log(resp.data)
+
+        ch.data.datasets[0].data[0] = resp.data.a1
+        ch.data.datasets[0].data[1] = resp.data.a2
+        ch.data.datasets[0].data[2] = resp.data.a3
+        ch.data.datasets[0].data[3] = resp.data.a4
+
+        ch.data.datasets[1].data[0] = resp.data.b1
+        ch.data.datasets[1].data[1] = resp.data.b2
+        ch.data.datasets[1].data[2] = resp.data.b3
+        ch.data.datasets[1].data[3] = resp.data.b4
+        chart.update()
+
+      })
+      // this.tongji()
+    },
+    methods: {
+        tongji(){
+          ch.data.datasets[0].data[0] = vue.$data.hege.a1
+          ch.data.datasets[0].data[1] = vue.$data.hege.a2
+          ch.data.datasets[0].data[2] = vue.$data.hege.a3
+          ch.data.datasets[0].data[3] = vue.$data.hege.a4
+
+          ch.data.datasets[1].data[0] = vue.$data.hege.b1
+          ch.data.datasets[1].data[1] = vue.$data.hege.b2
+          ch.data.datasets[1].data[2] = vue.$data.hege.b3
+          ch.data.datasets[1].data[3] = vue.$data.hege.b4
+          chart.update()
+        }
+    }
+
+  })
+//---------------------------------------------------------------------------------------------------------
+  function f() {
+    //ch.data.datasets[0].data = [1, 2, 3, 4]
+    chart.update()
+
+    v
+  }
+
+</script>
+
+</body>
+</html>

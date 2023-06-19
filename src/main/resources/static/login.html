@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>论文管理登录</title>
+    <link rel="icon" href="img/pic.ico">
+
+</head>
+<body style="">
+<script src="element-ui/axios-0.18.0.js"></script>
+<script src="element-ui/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<div style="width: 100%;height: 836px;background-image: url(img/1.jpeg);background-size: cover">
+
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
+
+<!--登录窗体距离页面顶部的距离-->
+<div  style="text-align: center;margin: auto;height: 200px;">
+
+</div>
+
+
+<!--登录窗体·-->
+<div id="loginframe" style="text-align: center;margin: auto;height: 400px">
+  <div style="font-size: 40px;"><strong>登   录</strong></div>
+  <div style="width: 40%;height: 300px;background-color: #66b1ff;margin: auto;text-align: center;border-radius: 15px">
+      <div style="display: inline-block;margin-top: 40px;font-size: 20px">账号</div>
+      <div style="display: inline-block;width: 50%">
+        <el-input
+                placeholder="输入你的账号"
+                v-model="user.username"
+                clearable>
+        </el-input>
+      </div>
+      <div></div>
+      <div style="display: inline-block;margin-top: 40px;font-size: 20px">密码</div>
+      <div style="display: inline-block;width: 50%">
+        <el-input placeholder="请输入密码" v-model="user.password" show-password></el-input>
+      </div>
+      <div style="margin-top: 50px">
+        <div style="display: inline-block;margin-left: 40px">
+          <el-button @click="zhuce()" type="primary" plain><span style="font-size: 18px">注册</span></el-button>
+        </div>
+        <div style="display: inline-block;margin-left: 40px">
+          <el-button @click="denglv()" type="success" plain><span style="font-size: 18px">登录</span></el-button>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+
+<script>
+  new Vue({
+    el: '#loginframe',
+    data(){
+      return{
+        input: '',
+        user:{
+          username:'',
+          password:'',
+        }
+      }
+    },
+    mounted(){
+        alert("请登录")
+    },
+    methods:{
+      zhuce() {
+          var _this = this
+          var url = 'http://127.0.0.1:8090/login/reg'
+          var url1 = "http://81.70.89.161:10004/login/reg"
+          axios({
+              method: 'post',
+              url: url1,
+              data: _this.user
+          }).then(function (resp) {
+              alert(resp.data)
+          })
+      },
+      denglv(){
+          var url = 'http://127.0.0.1:8090/login/log'
+          var url1 = "http://81.70.89.161:10004/login/log"
+        var _this = this
+        axios({
+          method: 'post',
+          url: url1,
+          data: _this.user
+        }).then(function (resp) {
+          alert(resp.data)
+            if (resp.data==="登录成功"){window.location.href = "http://81.70.89.161:10004/app.html"}
+        })
+      },
+    }
+  })
+</script>
+
+</div>
+</body>
+</html>

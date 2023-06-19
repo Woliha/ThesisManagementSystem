@@ -1,0 +1,1161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>论文管理系统</title>
+    <link rel="icon" sizes="any" mask href="https://www.baidu.com/favicon.ico">
+</head>
+<body style="">
+<script src="element-ui/axios-0.18.0.js"></script>
+<script src="element-ui/vue.js"></script>
+<script src="element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<!--主题页的列表名-->
+<style>
+    .el-table .warning-row {
+        background: oldlace;
+    }
+    .el-table .success-row {
+        background: #f0f9eb;
+    }
+</style>
+<!--公告与留言-->
+<style>
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    line-height: 60px;
+  }
+  .el-aside {
+    color: #333;
+  }
+</style>
+<style>
+  .duihuakuang{
+
+  }
+  .duihuakuang li{
+    background-color: #b3e19d;
+  }
+  .duihuakuang span{
+    font-size: 18px;
+  }
+</style>
+<div id="zxc">
+<!--    ------------------------------------------------------------------------------------>
+    <div>
+        <el-menu
+                :default-active="activeIndex2"
+                class="el-menu-demo"
+                mode="horizontal"
+                @select="handleSelect"
+                background-color="#545c64"
+                text-color="#fff"
+                active-text-color="#ffd04b">
+            <el-submenu index="2">
+                <template slot="title">个人信息</template>
+                <el-menu-item index="2-1">个人信息修改</el-menu-item>
+                <el-menu-item index="2-2">公告和留言</el-menu-item>
+                <el-menu-item index="2-3">退出登录</el-menu-item>
+            </el-submenu>
+        </el-menu>
+    </div>
+    <!--  论文查询主体部分-->
+    <div style="height: 800px;background-color: #b3d8ff">
+        <!--  个人信息修改-->
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible"
+                width="30%"
+                :before-close="handleClose">
+      <span>
+        <el-form ref="form" :model="form" label-width="80px">
+  <el-form-item label="更改名称">
+    <el-input v-model="form.name"></el-input>
+  </el-form-item>
+  <el-form-item label="更改权限">
+    <el-select v-model="form.Permissions" placeholder="选择更改权限">
+      <el-option label="管理员" value="管理员"></el-option>
+      <el-option label="普通用户" value="普通用户"></el-option>
+      <el-option label="老师" value="老师"></el-option>
+      <el-option label="学生" value="学生"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="院系信息">
+    <el-select v-model="form.school" placeholder="选择院系信息">
+      <el-option label="信息学院" value="信息学院"></el-option>
+      <el-option label="文法学院" value="文法学院"></el-option>
+      <el-option label="工程学院" value="工程学院"></el-option>
+      <el-option label="理学院" value="理学院"></el-option>
+    </el-select>
+  </el-form-item>
+          <el-form-item label="专业信息">
+    <el-input v-model="form.specialized"></el-input>
+  </el-form-item>
+</el-form>
+      </span>
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="submitform()">确 定</el-button>
+     </span>
+        </el-dialog>
+
+        <!--  公告与留言-->
+        <el-dialog
+                title="提示"
+                :visible.sync="dialogVisible1"
+                width="70%"
+                :before-close="handleClose">
+      <span>
+<!--  公告与留言-->
+        <div style="width: 100%;">
+            <el-container style="height: 500px; border: 1px solid #eee">
+                <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+                    <el-menu
+                            :default-openeds="['1', '3']"
+                            @select="handleSelectfriends">
+                        <el-submenu index="1">
+                            <template slot="title"><i class="el-icon-message"></i>导航一</template>
+                            <el-menu-item-group>
+                                <template slot="title">分组一</template>
+                                <el-menu-item index="1-1">{{friends[0].friend}}</el-menu-item>
+                                <el-menu-item index="1-2">{{friends[1].friend}}</el-menu-item>
+                                <el-menu-item index="1-3">{{friends[2].friend}}</el-menu-item>
+                                <el-menu-item index="1-4">{{friends[3].friend}}</el-menu-item>
+                                <el-menu-item index="1-5"><-公告-></el-menu-item>
+                            </el-menu-item-group>
+                            <el-menu-item-group title="分组2">
+                                <el-menu-item index="1-6">选项6</el-menu-item>
+                                <el-menu-item index="1-7">选项7</el-menu-item>
+                                <el-menu-item index="1-8">选项8</el-menu-item>
+                            </el-menu-item-group>
+                        </el-submenu>
+                    </el-menu>
+                </el-aside>
+                <el-container>
+                    <el-header style="text-align: right; font-size: 12px">
+                        <el-dropdown>
+                            <i class="el-icon-setting" style="margin-right: 15px"></i>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item>查看</el-dropdown-item>
+                                <el-dropdown-item>新增</el-dropdown-item>
+                                <el-dropdown-item>删除</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <span>设置</span>
+                    </el-header>
+                    <el-main>
+                        <div style="width: auto;background-color: #b3e19d;height: 100%">
+                            <ul id="shuru" class="duihuakuang">
+                            </ul>
+                        </div>
+                    </el-main>
+                </el-container>
+            </el-container>
+            <!--      输入框-->
+            <div style="width: auto;height: 53px;background-color: #409eff">
+                <div style="float: right;width: 83%;background-color: #cf9236;height: 53px">
+                    <!--          输入框，左浮动-->
+                    <div style="width: 75%;float: left;display: inline-block">
+                        <el-input
+                                type="textarea"
+                                :autosize="{ minRows: 2, maxRows: 4}"
+                                placeholder="请输入内容"
+                                v-model="textarea2">
+                        </el-input>
+                    </div>
+                    <!--          发送按钮，右浮动-->
+                    <div style="width: 20%;float: right;display: inline-block">
+                        <div style="margin-top: 7px">
+                            <el-row>
+                                <el-button @click="createshurukuang()" round>发送消息</el-button>
+                            </el-row>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </span>
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible1 = false">取 消</el-button>
+    <el-button type="primary" @click="submitform()">确 定</el-button>
+     </span>
+        </el-dialog>
+        <!--  论文查询的大框-->
+        <div style="background-color: #9df671;width: 80%;height: 700px;margin: auto;position: relative;top: 30px">
+<!--            论文查询的输入框-->
+            <div>
+                <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                    <el-form-item label="题目">
+                        <el-input v-model="selectThesis.title" placeholder="题目"></el-input>
+                    </el-form-item>
+                    <el-form-item label="作者名">
+                        <el-input v-model="selectThesis.author" placeholder="作者名"></el-input>
+                    </el-form-item>
+                    <el-form-item label="指导老师">
+                        <el-input v-model="selectThesis.teacher" placeholder="指导老师"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmitBySelect">查询</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="dialogVisible2=true">论文上传</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="selectForMy()">个人论文修改</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="paixu()">下载排行</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="paixu()"><a style=" text-decoration: none;" target="_blank" href="http://81.70.89.161:10004/chart.html">院系论文统计</a></el-button>
+
+                    </el-form-item>
+                </el-form>
+               <!-- 论文上传的UI部分-->
+                <div>
+                    <el-dialog
+                            title="论文上传"
+                            :visible.sync="dialogVisible2"
+                            width="50%"
+                            :before-close="handleClose">
+      <span>
+        <div>
+            <!--    提交表单-->
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="论文标题" prop="title">
+            <el-input v-model="ruleForm.title" ></el-input>
+        </el-form-item>
+        <el-form-item label="作者名" prop="author">
+            <el-input v-model="ruleForm.author"></el-input>
+        </el-form-item>
+        <el-form-item label="概述" prop="abstract1">
+            <el-input type="textarea" v-model="ruleForm.abstract1"  maxlength="255" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="指导老师" prop="teacher">
+            <el-input v-model="ruleForm.teacher"></el-input>
+        </el-form-item>
+        <el-form-item label="页数" prop="pages">
+            <el-input v-model="ruleForm.pages"></el-input>
+        </el-form-item>
+        <el-form-item label="论文类型" >
+            <el-select v-model="ruleForm.type" placeholder="请选选择论文的类型">
+                <el-option label="专本论文" value="专本论文"></el-option>
+                <el-option label="硕士论文" value="硕士论文"></el-option>
+                <el-option label="博士论文" value="博士论文"></el-option>
+                <el-option label="期刊发表" value="期刊发表"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="专业" >
+            <el-select v-model="ruleForm.specialized" placeholder="请选择专业">
+                <el-option label="1教育" value="1教育"></el-option>
+                <el-option label="2医学" value="2医学"></el-option>
+                <el-option label="3法学" value="3法学"></el-option>
+                <el-option label="4建筑" value="4建筑"></el-option>
+                <el-option label="5环境" value="5环境"></el-option>
+                <el-option label="6新闻" value="6新闻"></el-option>
+                <el-option label="7社会" value="7社会"></el-option>
+                <el-option label="8经济" value="8经济"></el-option>
+                <el-option label="9药学" value="9药学"></el-option>
+                <el-option label="10体育" value="10体育"></el-option>
+                <el-option label="11化学" value="11化学"></el-option>
+                <el-option label="12软件" value="12软件"></el-option>
+                <el-option label="13水力" value="13水力"></el-option>
+                <el-option label="14交通" value="14交通"></el-option>
+                <el-option label="15文学" value="15文学"></el-option>
+                <el-option label="16土木" value="16土木"></el-option>
+                <el-option label="17农业" value="17农业"></el-option>
+                <el-option label="18通信" value="18通信"></el-option>
+                <el-option label="19电子" value="19电子"></el-option>
+                <el-option label="20计算机" value="20计算机"></el-option>
+                <el-option label="21经济" value="21经济"></el-option>
+                <el-option label="22政治" value="22政治"></el-option>
+                <el-option label="23机械" value="23机械"></el-option>
+                <el-option label="24生物" value="24生物"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="得分(0~100)" prop="score">
+            <el-input v-model="ruleForm.score"></el-input>
+        </el-form-item>
+        <el-form-item label="完成时间" required>
+            <el-col :span="11">
+                <el-form-item >
+                    <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.successtime" style="width: 100%;"></el-date-picker>
+                </el-form-item>
+            </el-col>
+        </el-form-item>
+        <el-form-item>
+            <el-button disabled type="primary" @click="submitForm('ruleForm')">提交论文</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+    </el-form>
+            <br>
+            <hr>
+            <br>
+            <!--    上传word文档-->
+    <form id="fileform" action="/upload" method="post" enctype="multipart/form-data">
+        <label for="doc">选择一个Word文档：</label>
+        <input type="file" id="doc" name="doc" accept=".doc,.docx">
+    </form>
+            <el-row>
+            <el-button @click="uploadfile()" type="primary" plain>上传论文</el-button>
+        </el-row>
+        </div>
+      </span>
+                        <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible2 = false">取 消</el-button>
+                        <el-button disabled type="primary" @click="submitform()">确 定</el-button>
+                        </span>
+                    </el-dialog>
+                </div>
+<!--                论文修改的UI部分-->
+                <div>
+                    <el-dialog
+                            title="论文修改"
+                            :visible.sync="dialogVisible3"
+                            width="50%"
+                            :before-close="handleClose">
+      <span>
+        <div>
+            <!--    提交表单-->
+            <el-form :model="ruleForm1" :rules="rules" ref="ruleForm1" label-width="100px" class="ruleForm1">
+        <el-form-item label="论文标题" prop="title">
+            <el-input v-model="ruleForm1.title" ></el-input>
+        </el-form-item>
+        <el-form-item label="作者名" prop="author">
+            <el-input v-model="ruleForm1.author"></el-input>
+        </el-form-item>
+        <el-form-item label="概述" prop="abstract1">
+            <el-input type="textarea" v-model="ruleForm1.abstract"  maxlength="255" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="指导老师" prop="teacher">
+            <el-input v-model="ruleForm1.advisor"></el-input>
+        </el-form-item>
+        <el-form-item label="页数" prop="pages">
+            <el-input v-model="ruleForm1.pages"></el-input>
+        </el-form-item>
+        <el-form-item label="论文类型" >
+            <el-select v-model="ruleForm1.type" placeholder="请选选择论文的类型">
+                <el-option label="专本论文" value="专本论文"></el-option>
+                <el-option label="硕士论文" value="硕士论文"></el-option>
+                <el-option label="博士论文" value="博士论文"></el-option>
+                <el-option label="期刊发表" value="期刊发表"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="专业" >
+            <el-select v-model="ruleForm1.major" placeholder="请选择专业">
+                <el-option label="1教育" value="1教育"></el-option>
+                <el-option label="2医学" value="2医学"></el-option>
+                <el-option label="3法学" value="3法学"></el-option>
+                <el-option label="4建筑" value="4建筑"></el-option>
+                <el-option label="5环境" value="5环境"></el-option>
+                <el-option label="6新闻" value="6新闻"></el-option>
+                <el-option label="7社会" value="7社会"></el-option>
+                <el-option label="8经济" value="8经济"></el-option>
+                <el-option label="9药学" value="9药学"></el-option>
+                <el-option label="10体育" value="10体育"></el-option>
+                <el-option label="11化学" value="11化学"></el-option>
+                <el-option label="12软件" value="12软件"></el-option>
+                <el-option label="13水力" value="13水力"></el-option>
+                <el-option label="14交通" value="14交通"></el-option>
+                <el-option label="15文学" value="15文学"></el-option>
+                <el-option label="16土木" value="16土木"></el-option>
+                <el-option label="17农业" value="17农业"></el-option>
+                <el-option label="18通信" value="18通信"></el-option>
+                <el-option label="19电子" value="19电子"></el-option>
+                <el-option label="20计算机" value="20计算机"></el-option>
+                <el-option label="21经济" value="21经济"></el-option>
+                <el-option label="22政治" value="22政治"></el-option>
+                <el-option label="23机械" value="23机械"></el-option>
+                <el-option label="24生物" value="24生物"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="得分(0~100)" prop="score">
+            <el-input v-model="ruleForm1.score"></el-input>
+        </el-form-item>
+        <el-form-item label="完成时间" required>
+            <el-col :span="11">
+                <el-form-item >
+                    <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm1.successtime" style="width: 100%;"></el-date-picker>
+                </el-form-item>
+            </el-col>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="submitForm1()">修改论文</el-button>
+            <el-button @click="resetForm('ruleForm1')">重置</el-button>
+        </el-form-item>
+    </el-form>
+        </div>
+      </span>
+                        <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible3 = false">取 消</el-button>
+                        <el-button disabled type="primary" @click="submitform()">确 定</el-button>
+                        </span>
+                    </el-dialog>
+                </div>
+            </div>
+<!--            论文查询的表格-->
+            <div>
+                <div style="width: 100%;height:600px;background-color: #dd6161;margin: auto">
+                    <template>
+                        <el-table
+                                :data="Pages.papers"
+                                style="width: 100%"
+                                :row-class-name="tableRowClassName">
+                            <el-table-column
+                                    prop="author"
+                                    label="作者"
+                                    width="120">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="title"
+                                    label="题目"
+                                    width="150">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="abstract"
+                                    label="摘要">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="type"
+                                    label="类型">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="major"
+                                    label="专业">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="advisor"
+                                    label="指导教师">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="pages"
+                                    label="页数">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="score"
+                                    label="成绩">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="downloadTime"
+                                    label="下载次数">
+                            </el-table-column>
+                            <el-table-column
+                                    fixed="right"
+                                    label="操作"
+                                    width="210">
+                                <template slot-scope="scope">
+                                    <el-button @click="word(scope.row)" type="text" size="small">在线阅读</el-button>
+                                    <el-button @click="handleClick1(scope.row)" type="text" size="small">下载</el-button>
+                                    <el-button @click="handleClick(scope.row)" type="text" size="small">修改</el-button>
+                                    <el-button @click="handleClick2(scope.row)" type="text" size="small">删除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </template>
+<!--                    分页工具-->
+                    <div style="margin: auto" class="block">
+
+                        <el-pagination
+                                @size-change="handleSizeChange"
+                                @current-change="handleCurrentChange"
+                                :current-page.sync="currentPage1"
+                                :page-size="10"
+                                layout="total, prev, pager, next"
+                                :total="Pages.total">
+                        </el-pagination>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--下载时间和谁下载的统计-->
+    <el-dialog
+            title="论文信息"
+            :visible.sync="dialogVisible10"
+            width="30%"
+            :before-close="handleClose">
+        <span>
+            <template>
+        <el-table
+                :data="PaperDownload"
+                style="width: 100%">
+            <el-table-column
+                    prop="time"
+                    label="日期"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="username"
+                    label="姓名"
+                    width="180">
+            </el-table-column>
+        </el-table>
+    </template>
+        </span>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible10 = false">取 消</el-button>
+    <el-button type="primary" @click="Download()">下载</el-button>
+  </span>
+    </el-dialog>
+</div>
+
+<script>
+    new Vue({
+        el: '#zxc',
+        //页面加载完之后，发送论文表格请求
+        mounted(){
+            this.selectAll();
+            //页面加载完成后，获取本用户的用户名cookie，然后用cookie获取好友列表
+            var username = this.getCookie("username")
+            //this.getMyFriends(username)
+            if(username == "12345601" || username == "12345602" || username == "12345603" || username == "12345604" || username == "12345605"){
+                this.getMyFriends(username)
+            }
+            //将本用户的账号记录下来
+            this.mess.username1 = username;
+        },
+        data() {
+            return {
+                //论文下载数据表格的模型
+                PaperDownload:[{
+                    id:'',
+                    paperID:'',
+                    username:'',
+                    time:''
+                }],
+                //论文下载的中间缓存变量
+                rowtansfrom:'',
+                //
+                dialogVisible10: false,
+                //下载时间和谁下载
+                tableData3: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1516 弄'
+                }],
+                //---------------论文查询----------------------------
+                selectThesis:{
+                    title:'',
+                    author:'',
+                    teacher:'',
+                    page:''
+                },
+                //---------------发送请求聊天记录的模型-----------------
+                mess:{
+                    username1:'',
+                    username2:'',
+                    message:''
+                },
+                //-----------------接收聊天记录数据的模型-------------------
+                messag:{},
+                //--------------好友列表---------------------------
+                friends:[{friend:'12345602'},{friend:'12345603'},{friend:'12345604'},{friend:'12345605'},{friend:'12345678'}],
+                //--------------当前选择好友列表的第几个好友-----------
+                index: 0,
+                //--------------分页工具----------------------------
+                currentPage1: 1,
+                //--------------论文查询表格-------------------------
+                Pages:{
+                    papers: [{
+                        author:'不发火的喵',
+                        title:'提瓦特文明发展方向',
+                        abstract:'人人使用元素力',
+                        type:'元素',
+                        major:'全解',
+                        advisor:'天理',
+                        pages:'99',
+                        score:'99',
+                        downloadTime:'99',
+
+                        paperID:''
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }, {
+
+                    }],
+                    total:'',
+                },
+
+                tableData: [{
+                    author:'不发火的喵',
+                    title:'提瓦特文明发展方向',
+                    abstract:'人人使用元素力',
+                    type:'元素',
+                    major:'全解',
+                    advisor:'天理',
+                    pages:'99',
+                    score:'99',
+                    downloadTime:'99',
+
+                    paperID:''
+                }, {
+
+                }, {
+
+                }, {
+
+                }, {
+
+                }, {
+
+                }, {
+
+                }, {
+
+                }, {
+
+                }, {
+
+                }],
+                //---------------论文上传模型-------------------------
+                Thesis:{},
+                ruleForm: {
+                    title: '',
+                    author: '',
+                    abstract1: '',
+                    teacher: '',
+                    pages: '',
+                    specialized: '',
+                    type: '',
+                    score: '',
+                    src:'',
+
+                    successtime: ''
+                },
+                //---------------修改论文的模型-----------------------------
+                ruleForm1: {
+                    title: '',
+                    author: '',
+                    abstract1: '',
+                    teacher: '',
+                    pages: '',
+                    specialized: '',
+                    type: '',
+                    score: '',
+                    paperID:'',
+
+                    successtime: ''
+                },
+                rules: {
+                    title: [
+                        { required: true, message: '请输入活动名称', trigger: 'blur' },
+                        { min: 1, max: 32, message: '长度在 1 到 32 个字符', trigger: 'blur' }
+                    ],
+                    author: [
+                        { required: true, message: '请输入论文作者名称', trigger: 'blur' },
+                        { min: 1, max: 7, message: '长度在 1 到 7 个字符', trigger: 'blur' }
+                    ],
+                    abstract1: [
+                        { required: true, message: '请输入论文概述', trigger: 'blur' }
+                    ],
+                    teacher: [
+                        { required: true, message: '请输入指导教师名称', trigger: 'blur' },
+                        { min: 1, max: 7, message: '长度在 1 到 7 个字符', trigger: 'blur' }
+                    ],
+
+                    type1: [
+                        { required: true, message: '请选择论文类型', trigger: 'change' }
+                    ],
+
+                    specialized: [
+                        { required: true, message: '请选专业', trigger: 'change' }
+                    ],
+
+                    pages: [
+                        { required: true, message: '请输入论文的页数', trigger: 'blur' }
+                    ],
+
+                    score: [
+                        { required: true, message: '请输入论文的得分', trigger: 'blur' }
+                    ],
+
+                    date1: [
+                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                    ],
+                },
+                //----------------------------------------------------
+                //论文查询输入框
+                formInline: {
+                    user: '',
+                    region: ''
+                },
+                //当前账户的名字
+                name: '不发火的喵',
+                activeIndex2: '1',
+                dialogVisible: false,
+                dialogVisible1: false,
+                dialogVisible2: false,
+                dialogVisible3: false,
+                //发送消息的输入框的内容
+                textarea2: '',
+                //更改用户信息的表单
+                form: {
+                    // name:'',
+                    // Permissions:'',
+                    // school:'',
+                    // specialized:'',
+                },
+            }
+        },
+        paperzxc:{
+          paperID:''
+        },
+        methods: {
+            handleClick2(row){
+                console.log(row)
+                var _this = this
+
+                axios({
+                    method: "post",
+                    url: "http://81.70.89.161:10004/paper/"+row.paperID
+                }).then(function (resp) {
+                    if(resp.data == "success"){
+                        location.reload()
+                    }
+                })
+            },
+            paixu(){
+                var _this = this
+                axios({
+                    method: "get",
+                    url: "http://81.70.89.161:10004/rank"
+                }).then(function (resp) {
+                    console.log(resp.data)
+                    _this.Pages=resp.data
+                })
+            },
+            //----------------在线阅读----------------------
+            word(row){
+                this.rowtansfrom = row
+                console.log(row)
+                var wordElement = document.createElement('a')
+                wordElement.href = 'http://81.70.89.161:10004/readonline/'+this.rowtansfrom.paperID
+                console.log(wordElement.href)
+                document.body.appendChild(wordElement);
+                wordElement.click();
+                document.body.removeChild(wordElement);
+            },
+            //---------------下载论文-------------------------
+            Download(){
+                var _this = this
+                axios({
+                    responseType: 'blob',
+                    responseEncoding: 'utf8',
+                    method: "get",
+                    url: 'http://81.70.89.161:10004/download/d?id='+_this.rowtansfrom.paperID,
+                }).then(function (resp) {
+                    console.log(resp.data)
+                    let blob = new Blob([resp.data])
+                    let downloadElement = document.createElement('a')
+                    let href = window.URL.createObjectURL(blob); //创建下载的链接
+                    downloadElement.href = href;
+                    downloadElement.download = `x.doc`; //下载后文件名
+                    document.body.appendChild(downloadElement);
+                    downloadElement.click(); //点击下载
+                    document.body.removeChild(downloadElement); //下载完成移除元素
+                    window.URL.revokeObjectURL(href); //释放blob对象
+                })
+            },
+            //---------------查询自己的论文---------------------
+            selectForMy(){
+                var _this = this
+                axios({
+                    method: "get",
+                    url: 'http://81.70.89.161:10004/paper/update'
+                }).then(function (resp) {
+                    console.log(resp.data)
+                    _this.Pages.papers=resp.data
+                })
+            },
+            //--------------------------
+            selectAll(){
+                var _this = this
+                var url1 = "http://81.70.89.161:10004/paper/search?"
+                axios({
+                    method: "post",
+                    url: url1,
+                    data: _this.selectThesis
+                }).then(function (resp) {
+                    _this.Pages = resp.data
+                    console.log(resp.data)
+                })
+            },
+            getCookie(name) {
+                // 将cookie字符串分割为单个cookie
+                var cookies = document.cookie.split(';');
+
+                // 遍历每个cookie并查找名称匹配的cookie
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.indexOf(name) === 0) {
+                        // 如果找到匹配的cookie，则返回其值
+                        return cookie.substring(name.length + 1, cookie.length);
+                    }
+                }
+                // 如果未找到匹配的cookie，则返回null
+                return null;
+            }
+            ,
+            getMyFriends(username){
+                var _this = this
+                var url = 'http://127.0.0.1:8090/friend/f?username='+username
+                var url1 = 'http://81.70.89.161:10004/friend/f?username='+username
+                axios({
+                    method: "get",
+                    url: url1
+                }).then(function (resp) {
+                    _this.friends = resp.data
+                    alert("success")
+                })
+            },
+            //--------------论文表格的查看方法---------------------------------------------------------------
+            handleClick(row) {
+                this.ruleForm1 = row;
+                this.dialogVisible3 = true
+
+
+                console.log(this.dialogVisible3)
+                console.log(this.ruleForm1)
+            },
+            //--------------论文表格的论文下载按钮------------
+            handleClick1(row) {
+                this.PaperDownload = null
+                this.dialogVisible10 = true
+                this.rowtansfrom = row
+                var _this = this
+                var url1 = 'http://81.70.89.161:10004/download/?paperID='+this.rowtansfrom.paperID
+                axios({
+                    method: "get",
+                    url: url1,
+                }).then(function (resp) {
+                    console.log(resp.data)
+                    _this.PaperDownload=resp.data
+                })
+            },
+            //-------------分页工具-----------------
+            handleSizeChange(val) {
+                console.log(`每页 ${val} 条`);
+            },
+            handleCurrentChange(val) {
+                console.log(`当前页: ${val}`);
+                var url = ''
+                var url1 = 'http://81.70.89.161:10004/paper/search'
+                var _this = this
+                _this.selectThesis.page = val
+                axios({
+                    method: "post",
+                    url: url1,
+                    data: _this.selectThesis
+                }).then(function (resp) {
+                    _this.Pages = resp.data
+                    console.log(resp.data)
+                })
+            },
+            //--------------论文查询的表格------------
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex === 1) {
+                    return 'success-row';
+                } else if (rowIndex === 3) {
+                    return 'success-row';
+                }else if (rowIndex === 5) {
+                    return 'success-row';
+                }else if (rowIndex === 7) {
+                    return 'success-row';
+                }else if (rowIndex === 9) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            //---------------论文上传----------------
+            uploadfile(){
+                const formData = new FormData();
+                const form = document.getElementById('fileform'); // 获取表单元素
+                const fileInput = document.getElementById('doc'); // 获取文件输入框元素
+                const fileName = fileInput.files[0].name;
+                formData.append("file", fileInput.files[0]); // 将文件添加到FormData中
+                //formData.append('id',this.tableData.paperID)
+                formData.append('id',this.mess.username1)
+
+                var url = "http://localhost:8090/thesis/file"
+                var url1 = "http://81.70.89.161:10004/thesis/file"
+
+                console.log(this.mess.username1)
+                console.log(fileName)
+                this.ruleForm.src = this.mess.username1+"/"+fileName
+                console.log(this.ruleForm)
+
+                this.submitForm()
+                axios.post(url1, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data' // 设置请求头
+                    }
+                }).then(response => {
+                    alert(response.data)
+                }).catch(error => {
+                    console.error(error);
+                });
+
+            },
+            //-----------------------修改论文-----------------------------
+            submitForm1(){
+                var _this = this
+                var url = "http://127.0.0.1:8090/thesis/addthesis"
+                var url1 = "http://81.70.89.161:10004/paper/updata"
+                axios({
+                    method: "post",
+                    url: url1,
+                    data: _this.ruleForm1
+                }).then(function (resp) {
+                        alert(resp.data)
+                    }
+                )
+                alert("success")
+            },
+            submitForm() {
+                        var _this = this
+                        var url = "http://127.0.0.1:8090/thesis/addthesis"
+                        var url1 = "http://81.70.89.161:10004/thesis/addthesis"
+                        axios({
+                            method: "post",
+                            url: url1,
+                            data: _this.ruleForm
+                        }).then(function (resp) {
+                                alert(resp.data)
+                            }
+                );
+            },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+            },
+            onSubmitThesis() {
+                var url = "http://localhost:8090/thesis/addthesis"
+                var url1 = "http://81.70.89.161:10004/thesis/addthesis"
+                var _this=this
+                axios({
+                    method:"post",
+                    url: url1,
+                    data:_this.Thesis
+                }).then(function (resp){
+                    alert(resp.data)
+                })
+            },
+            //------------------发送论文查询--------------------
+            onSubmitBySelect() {
+                var url = ''
+                var url1 = 'http://81.70.89.161:10004/paper/search'
+
+                console.log('submit!');
+                var _this = this
+                _this.selectThesis.page = 1
+                axios({
+                    method: "post",
+                    url: url1,
+                    data: _this.selectThesis
+                }).then(function (resp) {
+                    console.log(resp.data)
+                    _this.Pages = resp.data
+                })
+            },
+            handleSelectfriends(key, keyPath){
+                console.log(key, keyPath);
+                console.log(key)
+                if('1-1' === key){
+                    //刷新聊天框
+                    this.refresh()
+                    //填充聊天记录
+                    this.readChathistory(this.friends[0].friend);
+                }else if('1-2'===key){
+                    // alert(this.friends[1].friend)
+                    this.refresh()
+                    this.readChathistory(this.friends[1].friend);
+                }else if('1-3'===key){
+                    // alert(this.friends[2].friend)
+                    this.refresh()
+                    this.readChathistory(this.friends[2].friend);
+                }else if('1-4'===key){
+                    // alert(this.friends[3].friend)
+                    this.refresh()
+                    this.readChathistory(this.friends[3].friend);
+                }else if('1-5'===key){
+                    // alert(this.friends[3].friend)
+                    this.refresh()
+                    this.readChathistory(this.friends[4].friend);
+                }
+            },
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+                if('2-1' === key){
+                    this.openupdata()
+                }else if('2-2'===key){
+                    this.openduihua()
+                }
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            openupdata(){
+                this.dialogVisible = true
+            },
+            openduihua(){
+                this.dialogVisible1 = true
+            },
+            //原版点击按钮，发送消息
+            createshurukuang(name){
+                var ulshuru = document.getElementById("shuru")
+                var li = document.createElement('li')
+                ulshuru.appendChild(li)
+                var div = document.createElement('div')
+                li.appendChild(div)
+                var br = document.createElement('br')
+                div.appendChild(br)
+                var div1 = document.createElement('div')
+                div.appendChild(div1)
+                var span = document.createElement('span')
+                div1.appendChild(span)
+                var div2 = document.createElement('div')
+                div.appendChild(div2)
+                var span1 = document.createElement('span')
+                div2.appendChild(span1)
+                var br1 = document.createElement('br')
+                var hr = document.createElement('hr')
+                div.appendChild(br1)
+                div.appendChild(hr)
+                name = '不发火的喵'
+                span.textContent = name
+                span1.textContent = '-----'+this.textarea2
+
+                //将你的消息发送到服务器
+                this.sendMessage(this.textarea2)
+                //清空你刚才的输入
+                this.textarea2 = ''
+            },
+            //上面方法的衔接，发送消息到数据库
+            //由于消息是在对话中发送的，所以参数只有一个，就是消息本身
+            sendMessage(message){
+                var _this = this
+                _this.mess.message = message
+                var url = 'http://127.0.0.1:8090/message/send'
+                var url1 = 'http://81.70.89.161:10004/message/send'
+                axios({
+                    method: "post",
+
+                    url: url1,
+                    data: _this.mess
+                }).then(function (resp) {
+                })
+            },
+            //用于刷新聊天框
+            refresh(){
+                var ulshuru = document.getElementById("shuru")
+                while (ulshuru.firstChild) {
+                    ulshuru.removeChild(ulshuru.firstChild);
+                }
+            },
+            //创建聊天记录，参数1：说话的人的名字，参数2：消息内容
+            createMessage(name,mesge){
+                var ulshuru = document.getElementById("shuru")
+                var li = document.createElement('li')
+                ulshuru.appendChild(li)
+                var div = document.createElement('div')
+                li.appendChild(div)
+                var br = document.createElement('br')
+                div.appendChild(br)
+                var div1 = document.createElement('div')
+                div.appendChild(div1)
+                var span = document.createElement('span')
+                div1.appendChild(span)
+                var div2 = document.createElement('div')
+                div.appendChild(div2)
+                var span1 = document.createElement('span')
+                div2.appendChild(span1)
+                var br1 = document.createElement('br')
+                var hr = document.createElement('hr')
+                div.appendChild(br1)
+                div.appendChild(hr)
+
+                span.textContent = name
+                span1.textContent = '-----'+mesge
+            }
+            ,
+            //读取数据库中的聊天记录
+            //参数：好友的账号
+            readChathistory(username2){
+                this.mess.username2 = username2
+                var _this = this
+                var url = 'http://127.0.0.1:8090/message/meg'
+                var url1 = 'http://81.70.89.161:10004/message/meg'
+                axios({
+                    method: "post",
+                    url: url1,
+                    data: this.mess
+                }).then(function (resp) {
+                    _this.messag = resp.data
+                    console.log(resp.data)
+                    console.log(resp.data.length)
+                    for (var i =0;i<resp.data.length;i++){
+                        _this.createMessage(_this.messag[i].username2,_this.messag[i].message)
+                    }
+                })
+            },
+
+            cheshi(){
+                alert("123456")
+            },
+            submitform(){
+                var url = 'http://127.0.0.1:8090/main/t'
+                var url1 = 'http://81.70.89.161:10004/main/t'
+                var _this = this
+                axios({
+                    method: 'post',
+                    url: url1,
+                    data: _this.form
+                }).then(function (resp) {
+                    alert(resp.data)
+                })
+            }
+        }
+    })
+</script>
+
+
+</body>
+</html>
